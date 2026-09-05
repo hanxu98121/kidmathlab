@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Probability Rule Trainer</title>
+  <style>
+    :root { --ink:#172033; --muted:#667085; --paper:#fbfaf7; --card:#fff; --line:#e6e3dc; --blue:#2f62d6; --blue-soft:#eef3ff; --green:#147a55; --red:#b33a45; --gold:#f5b942; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; color:var(--ink); background:radial-gradient(circle at 15% 0%,#e8efff 0 20%,transparent 45%), var(--paper); font:16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .shell { width:min(900px, calc(100% - 32px)); margin:0 auto; padding:38px 0 52px; }
+    header { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:22px; }
+    .eyebrow { color:var(--blue); font-size:12px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
+    h1 { margin:4px 0 6px; font-size:clamp(30px, 6vw, 48px); line-height:1.06; letter-spacing:-.04em; }
+    .intro { margin:0; color:var(--muted); max-width:650px; }
+    .score { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 15px; min-width:130px; text-align:right; box-shadow:0 6px 20px #24365b0d; }
+    .score strong { display:block; font-size:24px; }
+    .score span { color:var(--muted); font-size:13px; }
+    .progress { height:8px; background:#e9e7e1; border-radius:99px; overflow:hidden; margin:20px 0 28px; }
+    .progress > div { height:100%; width:1%; background:var(--blue); border-radius:inherit; transition:width .3s ease; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:22px; padding:clamp(22px, 5vw, 46px); box-shadow:0 18px 60px #24365b12; }
+    .meta { display:flex; justify-content:space-between; color:var(--muted); font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+    .tag { color:var(--blue); }
+    .question { margin:28px 0 34px; font-size:clamp(23px, 4vw, 34px); line-height:1.25; letter-spacing:-.02em; }
+    .hint { color:var(--muted); margin-top:-20px; margin-bottom:24px; }
+    .answers { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; }
+    button { border:0; border-radius:12px; font:inherit; font-weight:800; cursor:pointer; min-height:52px; padding:12px 15px; transition:transform .15s, box-shadow .15s, background .15s; }
+    button:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 18px #24365b1c; }
+    button:focus-visible { outline:3px solid #93b1ff; outline-offset:2px; }
+    .choice { background:var(--blue); color:white; }
+    .choice.secondary { background:var(--blue-soft); color:var(--blue); }
+    button:disabled { cursor:default; opacity:.7; }
+    .feedback { display:none; margin-top:24px; border-radius:14px; padding:18px; border:1px solid var(--line); }
+    .feedback.show { display:block; }
+    .feedback.correct { background:#edf9f3; border-color:#a8dfc4; }
+    .feedback.incorrect { background:#fff1f1; border-color:#efb7bc; }
+    .feedback h2 { margin:0 0 6px; font-size:18px; }
+    .feedback p { margin:5px 0 0; }
+    .rule { font-weight:800; }
+    .next { margin-top:20px; width:100%; background:var(--ink); color:#fff; display:none; }
+    .next.show { display:block; }
+    .finish { display:none; text-align:center; }
+    .finish.show { display:block; }
+    .finish h2 { font-size:32px; margin:0 0 8px; }
+    .restart { background:var(--blue); color:#fff; margin-top:18px; }
+    .legend { display:flex; gap:18px; flex-wrap:wrap; color:var(--muted); font-size:13px; margin-top:18px; }
+    .legend b { color:var(--ink); }
+    @media (max-width:600px) { .shell { width:min(100% - 20px, 900px); padding-top:24px; } header { display:block; } .score { margin-top:16px; text-align:left; display:inline-block; } .answers { grid-template-columns:1fr; } .question { margin-top:22px; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div><div class="eyebrow">Probability practice</div><h1>Add or multiply?</h1><p class="intro">Read each English word problem and choose the rule that models it. You do not need to calculate the probability.</p></div>
+      <div class="score" aria-live="polite"><strong id="score">0 / 0</strong><span>correct answers</span></div>
+    </header>
+    <div class="progress" aria-label="Quiz progress"><div id="bar"></div></div>
+    <section class="card" id="quiz" aria-live="polite">
+      <div class="meta"><span id="counter">Question 1 of 100</span><span class="tag" id="type">Rule check</span></div>
+      <p class="question" id="question"></p>
+      <p class="hint">Choose the operation used to combine the events.</p>
+      <div class="answers" id="answers">
+        <button class="choice" data-answer="add">Add</button>
+        <button class="choice" data-answer="multiply">Multiply</button>
+        <button class="choice secondary" data-answer="unknown">I don't know</button>
+      </div>
+      <div class="feedback" id="feedback"><h2 id="feedbackTitle"></h2><p class="rule" id="feedbackRule"></p><p id="feedbackText"></p></div>
+      <button class="next" id="next">Next question</button>
+    </section>
+    <section class="card finish" id="finish"><h2>Round complete!</h2><p id="finalText"></p><button class="restart" id="restart">Start again</button></section>
+    <div class="legend"><span><b>Add</b> = one event OR another, when the outcomes are separate.</span><span><b>Multiply</b> = one event AND another event happen together.</span></div>
+  </main>
+  <script>
+    const add = (question, explanation) => ({ question, answer:'add', explanation });
+    const multiply = (question, explanation) => ({ question, answer:'multiply', explanation });
+    const questions = [
+      add('A fair die is rolled once. What is the probability of rolling a 2 or a 5?', 'These are two separate, mutually exclusive outcomes of one roll, so the probabilities are added.'),
+      add('A card is drawn from a standard deck. What is the probability of drawing a heart or a diamond?', 'A single card cannot be both a heart and a diamond. These separate outcomes are combined with addition.'),
+      add('A spinner has 8 equal sections numbered 1 to 8. What is the probability of landing on 1 or 8?', 'The spinner lands on one result, so 1 and 8 are separate alternatives. Add their probabilities.'),
+      add('A bag contains red, blue, green, and yellow marbles. What is the probability of drawing a red or a green marble on one draw?', 'One draw gives one color. Red and green are mutually exclusive choices, so add.'),
+      add('A coin is tossed once. What is the probability of getting heads or tails?', 'The two possible outcomes cannot happen at the same time, so their probabilities are added.'),
+      add('A raffle ticket is chosen from tickets numbered 1 through 20. What is the probability of choosing 7 or 14?', 'The ticket is either 7 or 14, not both. Separate alternatives use addition.'),
+      add('A six-sided die is rolled. What is the probability of rolling an even number or a 5?', 'The even outcomes and the outcome 5 are separate sets here, so add their probabilities.'),
+      add('One student is selected from a class. What is the probability the student is left-handed or ambidextrous?', 'A student is classified into one of these categories for this question. The alternatives are combined by addition.'),
+      add('A jar has tickets labeled A, B, C, and D. What is the probability of picking A or C?', 'One ticket is picked, so A and C are mutually exclusive outcomes. Add.'),
+      add('A weather app says tomorrow may be sunny or cloudy, with no overlap in the forecast categories. What is the probability of sunny or cloudy?', 'The forecast categories are alternatives for the same day, so the rule is addition.'),
+      add('A card is drawn once. What is the probability of drawing a king or a queen?', 'A card cannot be both ranks at once. These alternatives are added.'),
+      add('A die is rolled once. What is the probability of rolling less than 3 or exactly 6?', 'The outcomes are separate results of one roll, so their probabilities are added.'),
+      add('A box contains 12 pencils: 5 red, 4 blue, and 3 black. What is the probability of selecting a red or a blue pencil?', 'The pencil has one color. Red and blue are mutually exclusive outcomes, so add.'),
+      add('A wheel has equal sections labeled cat, dog, bird, and fish. What is the probability of landing on dog or fish?', 'One spin produces one label. The two alternatives are combined by addition.'),
+      add('A number from 1 to 10 is chosen at random. What is the probability of choosing a 3 or a multiple of 4?', 'The favorable choices are separate outcomes in this setup, so use addition.'),
+      add('A standard deck card is drawn. What is the probability of drawing an ace or a jack?', 'A card has only one rank, so ace and jack are mutually exclusive alternatives. Add.'),
+      add('A bag contains 9 balls: 2 white, 3 orange, and 4 purple. What is the probability of drawing a white or purple ball?', 'The one ball drawn can have only one of these colors. Add the separate cases.'),
+      add('A die is rolled. What is the probability of rolling a 1 or an odd number greater than 3?', 'The possible favorable results are alternative outcomes of one roll, so their probabilities are added.'),
+      add('A person chooses one drink from tea, juice, water, or milk. What is the probability of choosing tea or milk?', 'Only one drink is chosen. Tea and milk are separate alternatives, so add.'),
+      add('A spinner has 10 equal sections. What is the probability of landing on a red section or the section labeled 10?', 'The spinner lands in one section; these are distinct favorable outcomes. Add.'),
+      add('A card is selected. What is the probability it is a spade or a club?', 'A single card has one suit. Spade and club are mutually exclusive, so add.'),
+      add('A classroom door code uses one digit from 0 to 9. What is the probability the digit is 0 or 9?', 'One digit is selected, so these are separate alternatives. Use addition.'),
+      add('A bag has 6 numbered balls. What is the probability of drawing an odd number or the number 2?', 'The draw produces one number, and these outcomes are combined as alternatives by addition.'),
+      add('A survey selects one favorite sport. What is the probability the answer is soccer or tennis?', 'Only one response is recorded in this question, so the alternatives are added.'),
+      add('A fair die is rolled. What is the probability of rolling a number greater than 4 or exactly 1?', 'The favorable results are separate outcomes of one roll. Add their probabilities.'),
+      add('A standard deck card is drawn. What is the probability of drawing a 7 or a 10?', 'A single card cannot have both ranks; add the mutually exclusive rank cases.'),
+      add('A bag contains red and yellow tokens. What is the probability of drawing red or yellow on one draw?', 'The one token must be one color in this setup. Red and yellow are alternatives, so add.'),
+      add('A spinner is divided into equal blue, green, purple, and orange sections. What is the probability of blue or orange?', 'One spin produces one color. Combine these separate outcomes with addition.'),
+      add('One day is selected from a week. What is the probability it is Saturday or Sunday?', 'The selected day is one day, so Saturday and Sunday are separate alternatives. Add.'),
+      add('A number from 1 to 12 is chosen. What is the probability it is 4 or 11?', 'The number is one result, and 4 and 11 are mutually exclusive. Add.'),
+      add('A card is drawn from a deck. What is the probability it is a red card or a black card?', 'Every card is either red or black, and the categories do not overlap. The cases are added.'),
+      add('A die is rolled. What is the probability of rolling 2 or a number greater than 4?', 'The possible results are alternative outcomes of one roll, so add their probabilities.'),
+      add('A bag contains 8 tiles labeled with letters. What is the probability of selecting M or T?', 'One tile is selected, so the two letter outcomes are mutually exclusive. Add.'),
+      add('A spinner has 12 equal sections. What is the probability of landing on section 3 or section 9?', 'The spinner can land on only one section. These alternatives use addition.'),
+      add('A student draws one card from a set of subject cards. What is the probability of drawing Math or History?', 'Only one subject card is drawn, so the two alternatives are added.'),
+      add('A fair coin is tossed once. What is the probability of tails or not heads?', 'These describe the same single outcome in this simple experiment, so the rule is still the alternative-outcome addition rule.'),
+      add('A die is rolled once. What is the probability of rolling 3 or 4?', 'A single roll cannot be both 3 and 4. These mutually exclusive outcomes are added.'),
+      add('A box contains 20 envelopes, 6 stamped and 14 unstamped. What is the probability of choosing a stamped or unstamped envelope?', 'Every envelope belongs to one of the two separate categories, so add.'),
+      add('A raffle chooses one prize: a book, a game, or a puzzle. What is the probability of winning a book or a puzzle?', 'Only one prize is selected. The favorable prizes are alternatives and use addition.'),
+      add('A number from 1 to 6 is selected. What is the probability it is prime or 1?', 'The selected number is one outcome, and these cases are separate. Add.'),
+      add('A card is drawn from four cards labeled North, South, East, and West. What is the probability of North or East?', 'One card is drawn, so the directions are mutually exclusive alternatives. Add.'),
+      add('A die is rolled. What is the probability of rolling an even number or a 1?', 'The even outcomes and 1 are separate outcomes in one roll, so add.'),
+      add('A bag contains 10 candies in lemon, mint, and berry flavors. What is the probability of choosing lemon or mint?', 'One candy has one flavor. These separate flavor cases are added.'),
+      add('A spinner has equal sections labeled A through F. What is the probability of landing on B or F?', 'One spin gives one letter, so the alternatives are combined by addition.'),
+      add('A person chooses one bus route from Route 2 or Route 5. What is the probability of choosing Route 2 or Route 5?', 'Only one route is selected. The two mutually exclusive choices use addition.'),
+      add('A card is selected from cards numbered 1 through 10. What is the probability of selecting 1 or 10?', 'The card can have only one number, so these alternatives are added.'),
+      add('A fair die is rolled. What is the probability of rolling a number less than 3 or greater than 5?', 'The two groups are separate possible results of one roll, so add their probabilities.'),
+      add('A jar contains stars, circles, and squares. What is the probability of drawing a star or a square?', 'One shape is drawn. These alternatives are mutually exclusive and use addition.'),
+      add('A survey asks for one preferred season. What is the probability of choosing winter or summer?', 'One season is chosen, so the alternatives are combined by addition.'),
+      add('A wheel has 5 equal sections. What is the probability of landing on section 1 or section 4?', 'A spin lands on one section only. Add the separate favorable outcomes.'),
+      multiply('A coin is tossed twice. What is the probability of getting heads on both tosses?', 'Both tosses must happen together: heads AND heads. Multiply the probabilities of the sequential events.'),
+      multiply('A fair die is rolled twice. What is the probability of rolling a 6 both times?', 'The first 6 and the second 6 are consecutive requirements, so multiply.'),
+      multiply('A bag has 3 red and 2 blue marbles. One marble is drawn, replaced, and another is drawn. What is the probability of red twice?', 'The two red draws must both occur. Because the marble is replaced, multiply the two independent probabilities.'),
+      multiply('A bag has 4 green and 6 yellow balls. Two balls are drawn without replacement. What is the probability both are green?', 'Green must happen on draw one AND draw two. Without replacement changes the second probability, but the events are still multiplied.'),
+      multiply('A card is drawn, replaced, and another card is drawn. What is the probability both cards are aces?', 'Two ace events must occur in sequence. Replacement keeps the probabilities the same, and multiplication combines them.'),
+      multiply('A spinner with 4 equal colors is spun twice. What is the probability of blue on both spins?', 'Both spins must be blue, so multiply the probability for each spin.'),
+      multiply('A die is rolled and a coin is tossed. What is the probability of rolling an even number and getting heads?', 'The die event AND the coin event are both required, so multiply their probabilities.'),
+      multiply('A class randomly selects a captain and then a vice-captain from different students. What is the probability that two named students get those roles in that order?', 'The first assignment AND the second assignment must occur, so multiply the conditional probabilities.'),
+      multiply('A jar has 5 white and 5 black beads. Two beads are drawn without replacement. What is the probability of white first and black second?', 'This is an ordered sequence requiring both events. Multiply, using the changed second probability.'),
+      multiply('A card is drawn from a deck, replaced, and drawn again. What is the probability of a heart both times?', 'The heart event must occur on both draws, so use multiplication.'),
+      multiply('A fair coin is tossed three times. What is the probability of getting tails every time?', 'Tails must occur on toss one AND two AND three. Multiply all three probabilities.'),
+      multiply('A six-sided die is rolled twice. What is the probability the first roll is 2 and the second roll is greater than 4?', 'Both conditions refer to consecutive rolls, so multiply their probabilities.'),
+      multiply('A box has 7 red and 3 blue pens. Two pens are selected without replacement. What is the probability both are blue?', 'Both selections must be blue. Since the first pen is not replaced, multiply with the updated second probability.'),
+      multiply('A spinner has 8 equal sections. It is spun twice. What is the probability of landing on section 3 both times?', 'The same result is required on both independent spins, so multiply.'),
+      multiply('A die is rolled and a card is drawn. What is the probability of rolling 1 and drawing a queen?', 'The die result AND card rank must both occur, so multiply.'),
+      multiply('A bag contains 2 red, 3 green, and 5 yellow balls. Two balls are drawn without replacement. What is the probability of red first and yellow second?', 'The two color events must happen in order. Multiply the first probability by the changed second probability.'),
+      multiply('A coin is tossed and a spinner with 5 equal sections is spun. What is the probability of heads and section 1?', 'Both experiments must produce their specified results, so multiply.'),
+      multiply('Two cards are drawn without replacement. What is the probability both cards are kings?', 'The first king AND the second king are needed. Multiplication handles this dependent sequence.'),
+      multiply('A card is drawn and replaced three times. What is the probability of drawing a diamond each time?', 'Each draw must be a diamond. Multiply the probability for all three required events.'),
+      multiply('A die is rolled three times. What is the probability of rolling an odd number every time?', 'Odd on roll one AND roll two AND roll three requires multiplication.'),
+      multiply('A box contains 8 red and 2 white blocks. Two blocks are chosen without replacement. What is the probability of red first and white second?', 'This is a sequence of two required events, so multiply the appropriate first and second probabilities.'),
+      multiply('A spinner with 3 equal sections is spun, then a coin is tossed. What is the probability of section A and tails?', 'Both outcomes must happen, so multiply.'),
+      multiply('A standard deck card is drawn without replacement twice. What is the probability the first card is a heart and the second is a heart?', 'Both draws must meet the condition. Without replacement changes the second probability, but the rule is multiplication.'),
+      multiply('A bag has 6 red and 4 blue tokens. Two tokens are drawn with replacement. What is the probability of drawing blue twice?', 'Blue must occur on both draws. Replacement makes the draws independent, so multiply.'),
+      multiply('A die is rolled twice. What is the probability of an even number first and a 6 second?', 'Both ordered conditions are required, so multiply their probabilities.'),
+      multiply('A coin is tossed four times. What is the probability all four tosses are heads?', 'All four events must occur together; multiply the four head probabilities.'),
+      multiply('A raffle selects one ticket, replaces it, and selects again. What is the probability the same named ticket is selected twice?', 'The specified ticket must be selected on both draws, so multiply.'),
+      multiply('A bag contains 5 yellow and 5 purple beads. Two are drawn without replacement. What is the probability of yellow first and purple second?', 'Both color conditions must happen in order. Multiply with the updated second probability.'),
+      multiply('A die is rolled and a spinner is spun. What is the probability of rolling a number less than 3 and landing on red?', 'The die condition AND spinner condition are required, so multiply.'),
+      multiply('A card is drawn, replaced, and drawn again. What is the probability of a spade first and a club second?', 'Both suit events are needed in sequence. With replacement, multiply the independent probabilities.'),
+      multiply('A box has 9 green and 1 orange marble. Two are drawn without replacement. What is the probability of orange first and green second?', 'The ordered pair requires both events, so multiply their conditional probabilities.'),
+      multiply('A fair die is rolled four times. What is the probability of rolling 4 every time?', 'Four consecutive 4s are required, so multiply the probability for each roll.'),
+      multiply('A coin is tossed twice and a die is rolled once. What is the probability of heads, heads, and then a 5?', 'All three specified outcomes must occur, so multiply the three probabilities.'),
+      multiply('A bag contains 3 black and 7 white balls. Two balls are drawn without replacement. What is the probability of black twice?', 'Black must occur on both draws. The second probability changes, but the sequential rule is multiplication.'),
+      multiply('A spinner with 10 equal sections is spun twice. What is the probability of landing on an even-numbered section both times?', 'The even result is required on spin one AND spin two, so multiply.'),
+      multiply('A deck card is drawn and replaced twice. What is the probability of drawing a queen on both draws?', 'Both draws must be queens. Replacement makes the probabilities independent, so multiply.'),
+      multiply('A die is rolled twice without changing the die. What is the probability of rolling a number greater than 3 both times?', 'Both rolls must meet the condition, so multiply the two roll probabilities.'),
+      multiply('A bag has 4 red and 6 blue balls. Two are drawn without replacement. What is the probability of blue first and red second?', 'The required sequence is blue AND red. Multiply, adjusting the second probability after the first draw.'),
+      multiply('A coin is tossed and a card is drawn. What is the probability of tails and an ace?', 'Both independent events must occur, so multiply.'),
+      multiply('A spinner with 6 equal sections is spun three times. What is the probability of landing on section 6 every time?', 'The same outcome is required on all three spins, so multiply.'),
+      multiply('Two students are chosen in order from a group without replacement. What is the probability that two named students are chosen first and second?', 'Both selections must occur in the specified order, so multiply the conditional probabilities.'),
+      multiply('A card is drawn from a deck without replacement twice. What is the probability the first card is red and the second card is black?', 'Red first AND black second is a two-step sequence, so multiply.'),
+      multiply('A die and a coin are used. What is the probability of rolling an odd number and getting tails?', 'Both conditions are required from separate experiments, so multiply.'),
+      multiply('A jar has 8 white and 2 blue beads. Two beads are drawn with replacement. What is the probability of blue twice?', 'Blue is required on both independent draws, so multiply.'),
+      multiply('A number card from 1 to 5 is drawn, replaced, and drawn again. What is the probability of drawing 1 both times?', 'The two draws must both be 1. Replacement means multiplication of equal probabilities.'),
+      multiply('A fair coin is tossed three times. What is the probability of heads, tails, then heads?', 'This exact sequence requires all three events, so multiply.'),
+      multiply('A die is rolled twice without replacement of outcomes. What is the probability of a 2 first and an even number second?', 'The two ordered conditions must both occur, so multiply their probabilities.'),
+      multiply('A card is drawn, replaced, and drawn again. What is the probability of a red card both times?', 'Red must occur twice in sequence. Replacement makes multiplication straightforward.'),
+      multiply('A spinner has 4 equal sections and is spun three times. What is the probability of landing on green at least in the specified first and second spins?', 'The specified green result must happen on both required spins, so multiply those events.'),
+      multiply('A bag contains 1 gold and 9 silver tokens. Two tokens are drawn without replacement. What is the probability of gold first and silver second?', 'The ordered gold-then-silver sequence requires both events, so multiply.')
+    ];
+    let order = [], current = 0, correct = 0, answered = false;
+    const $ = id => document.getElementById(id);
+    function shuffle(items) { return [...items].sort(() => Math.random() - .5); }
+    function start() { order = shuffle(questions.map((_, i) => i)); current = 0; correct = 0; $('finish').classList.remove('show'); $('quiz').style.display='block'; render(); }
+    function render() {
+      answered = false; const q = questions[order[current]]; $('counter').textContent = `Question ${current + 1} of ${questions.length}`; $('question').textContent = q.question; $('score').textContent = `${correct} / ${current}`; $('bar').style.width = `${(current / questions.length) * 100}%`; $('feedback').className='feedback'; $('next').classList.remove('show'); document.querySelectorAll('[data-answer]').forEach(b => { b.disabled=false; b.classList.remove('chosen'); });
+    }
+    function choose(value) {
+      if (answered) return; answered=true; const q=questions[order[current]]; const isCorrect=value===q.answer; if (isCorrect) correct++;
+      $('score').textContent=`${correct} / ${current+1}`; $('bar').style.width=`${((current+1)/questions.length)*100}%`; $('feedbackTitle').textContent=isCorrect ? 'Correct!' : value==='unknown' ? 'Here is the rule:' : 'Not quite'; $('feedbackRule').textContent=`Correct rule: ${q.answer === 'add' ? 'Add' : 'Multiply'}`; $('feedbackText').textContent=q.explanation; $('feedback').className=`feedback show ${isCorrect ? 'correct' : 'incorrect'}`; $('next').classList.add('show'); document.querySelectorAll('[data-answer]').forEach(b=>b.disabled=true);
+    }
+    document.querySelectorAll('[data-answer]').forEach(b=>b.addEventListener('click',()=>choose(b.dataset.answer)));
+    $('next').addEventListener('click',()=>{ if(current < questions.length-1){ current++; render(); } else { $('quiz').style.display='none'; $('finish').classList.add('show'); $('finalText').textContent=`You answered ${correct} out of ${questions.length} correctly.`; } });
+    $('restart').addEventListener('click',start); start();
+  </script>
+</body>
+</html>

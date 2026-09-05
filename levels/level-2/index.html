@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Probability Formula Builder</title>
+  <style>
+    :root{--ink:#182235;--muted:#687386;--paper:#f7f8fc;--card:#fff;--line:#dfe4ee;--blue:#315fce;--blue-soft:#eef3ff;--green:#187a55;--red:#b83d4a;--gold:#f0ae3d;--shadow:0 18px 60px #25365b14}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,#e9f0ff 0 19%,transparent 42%),var(--paper);color:var(--ink);font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}.shell{width:min(980px,calc(100% - 28px));margin:auto;padding:30px 0 54px}header{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:20px}.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--blue)}h1{font-size:clamp(30px,6vw,48px);line-height:1.05;letter-spacing:-.045em;margin:5px 0 8px}.intro{margin:0;max-width:650px;color:var(--muted)}.score{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 15px;min-width:130px;text-align:right;box-shadow:0 8px 25px #25365b0d}.score strong{font-size:24px;display:block}.score span{font-size:13px;color:var(--muted)}.progress{height:8px;border-radius:99px;background:#e5e8ef;overflow:hidden;margin:20px 0 25px}.progress>div{height:100%;width:1%;background:var(--blue);transition:width .3s}.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,4vw,40px);box-shadow:var(--shadow)}.meta{display:flex;justify-content:space-between;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:800}.meta .tag{color:var(--blue)}.question{font-size:clamp(21px,3.2vw,30px);line-height:1.3;letter-spacing:-.02em;margin:25px 0 24px}.instruction{color:var(--muted);margin:0 0 13px}.formula{display:grid;grid-template-columns:1fr 100px 1fr;gap:12px;align-items:center;margin:0 0 25px}.slot{min-height:76px;border:2px dashed #b9c6df;border-radius:15px;background:#f8faff;display:flex;align-items:center;justify-content:center;color:#8995a8;font-weight:700;position:relative;transition:.15s}.slot.hot{border-color:var(--blue);background:var(--blue-soft)}.slot.filled{border-style:solid;border-color:var(--blue);background:#fff;color:var(--ink);font-size:24px}.slot .remove{position:absolute;right:7px;top:3px;border:0;background:transparent;color:#8b96a7;font-size:18px;line-height:1;cursor:pointer}.operator-slot{font-size:28px}.bank-label{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:800;margin-bottom:9px}.bank{display:flex;gap:10px;flex-wrap:wrap;padding:14px;border:1px solid var(--line);border-radius:16px;background:#fafbfe;min-height:72px}.token{touch-action:none;user-select:none;min-width:76px;min-height:52px;border:1px solid #cbd5e8;border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:21px;font-weight:800;box-shadow:0 3px 8px #25365b12;cursor:grab;transition:transform .12s,box-shadow .12s}.token.operator{min-width:66px;color:var(--blue);font-size:28px}.token:hover,.token.selected{transform:translateY(-2px);box-shadow:0 8px 16px #25365b22;border-color:var(--blue)}.token.dragging{opacity:.28;cursor:grabbing}.drag-ghost{position:fixed;left:0;top:0;z-index:9999;display:flex;align-items:center;justify-content:center;pointer-events:none;user-select:none;border:1px solid #8eaaf0;border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:21px;font-weight:800;box-shadow:0 16px 30px #263e7652;will-change:transform;transform-origin:center}.drag-ghost.operator{color:var(--blue);font-size:28px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions button,.next,.restart{border:0;border-radius:12px;min-height:50px;padding:12px 18px;font:inherit;font-weight:800;cursor:pointer;transition:.15s}.actions button:hover,.next:hover,.restart:hover{transform:translateY(-2px);box-shadow:0 8px 17px #25365b1e}.check{background:var(--blue);color:white}.clear{background:var(--blue-soft);color:var(--blue)}.unknown{background:#fff6e2;color:#926414}.feedback{display:none;margin-top:22px;padding:17px;border-radius:14px;border:1px solid var(--line)}.feedback.show{display:block}.feedback.correct{background:#edf9f3;border-color:#a9ddc5}.feedback.incorrect{background:#fff0f1;border-color:#efb6bd}.feedback h2{margin:0 0 5px;font-size:18px}.feedback p{margin:5px 0}.next{display:none;width:100%;margin-top:18px;background:var(--ink);color:white}.next.show{display:block}.finish{display:none;text-align:center}.finish.show{display:block}.finish h2{font-size:32px;margin:0 0 8px}.restart{margin-top:17px;background:var(--blue);color:white}.legend{display:flex;gap:17px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:17px}.legend b{color:var(--ink)}@media(max-width:620px){.shell{width:calc(100% - 18px);padding-top:22px}header{display:block}.score{margin-top:15px;text-align:left;display:inline-block}.formula{grid-template-columns:1fr 72px 1fr;gap:7px}.slot{min-height:68px}.bank{gap:8px}.token{min-width:65px}.question{margin-top:20px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header><div><div class="eyebrow">Probability practice · level 2</div><h1>Build the formula</h1><p class="intro">Drag the two correct fractions and the correct operation into the answer area. Read carefully: replacement changes the second probability.</p></div><div class="score" aria-live="polite"><strong id="score">0 / 0</strong><span>correct formulas</span></div></header>
+    <div class="progress" aria-label="Quiz progress"><div id="bar"></div></div>
+    <section class="card" id="quiz" aria-live="polite"><div class="meta"><span id="counter">Question 1 of 100</span><span class="tag">Formula builder</span></div><p class="question" id="question"></p><p class="instruction">Place cards in the three slots, then check your formula. Tap a filled slot to return its card.</p><div class="formula"><div class="slot" data-slot="0">fraction</div><div class="slot operator-slot" data-slot="1">operation</div><div class="slot" data-slot="2">fraction</div></div><div class="bank-label">Cards</div><div class="bank" id="bank"></div><div class="actions"><button class="check" id="check">Check answer</button><button class="clear" id="clear">Clear formula</button><button class="unknown" id="unknown">I don't know</button></div><div class="feedback" id="feedback"><h2 id="feedbackTitle"></h2><p class="rule" id="feedbackRule"></p><p id="feedbackText"></p></div><button class="next" id="next">Next question</button></section>
+    <section class="card finish" id="finish"><h2>Round complete!</h2><p id="finalText"></p><button class="restart" id="restart">Start again</button></section>
+    <div class="legend"><span><b>+</b> combines separate “or” outcomes.</span><span><b>×</b> combines required “and” events.</span><span>For without replacement, update the next numerator and denominator.</span></div>
+  </main>
+  <script>
+    const A=(story,a,b,d1,d2,explanation)=>({type:'add',story,a,b,d:[d1,d2],op:'+',explanation});
+    const M=(story,a,b,d1,d2,explanation)=>({type:'multiply',story,a,b,d:[d1,d2],op:'×',explanation});
+    const addQuestions=[
+      A('A fair die is rolled once. What is the probability of rolling a 2 or a 5?','1/6','1/6','2/6','1/5','The die shows one result, so rolling 2 OR 5 uses two mutually exclusive probabilities: 1/6 + 1/6.'),
+      A('A card is drawn from a standard deck. What is the probability of a heart or a diamond?','13/52','13/52','26/52','12/52','One card cannot be both suits, so the heart and diamond cases are added.'),
+      A('A spinner has 8 equal sections. What is the probability of landing on 1 or 8?','1/8','1/8','2/8','1/7','One spin gives one section. The two separate outcomes are added.'),
+      A('A bag contains 5 red and 7 blue marbles. What is the probability of red or blue on one draw?','5/12','7/12','5/7','12/12','A single marble is red OR blue. Add the two color cases.'),
+      A('A coin is tossed once. What is the probability of heads or tails?','1/2','1/2','2/2','1/1','Heads and tails are separate outcomes of one toss, so add.'),
+      A('One raffle ticket from 20 is chosen. What is the probability of ticket 7 or ticket 14?','1/20','1/20','2/20','1/14','The ticket is one number, so these two alternatives are added.'),
+      A('A die is rolled. What is the probability of an even number or a 5?','3/6','1/6','4/6','3/5','The even results and 5 are separate outcomes, so add.'),
+      A('One student is selected. What is the probability the student is left-handed or ambidextrous?','3/20','1/20','4/20','3/19','The categories are alternatives for one student, so add.'),
+      A('A jar has 4 tickets labeled A, B, C, and D. What is the probability of A or C?','1/4','1/4','2/4','1/3','One ticket is picked. A and C are mutually exclusive, so add.'),
+      A('A forecast classifies tomorrow as sunny or cloudy. What is the probability of sunny or cloudy?','3/7','4/7','7/7','3/6','These are separate forecast categories for one day, so add.'),
+      A('A card is drawn once. What is the probability of a king or a queen?','4/52','4/52','8/52','4/51','A card has one rank. Add the two rank cases.'),
+      A('A die is rolled. What is the probability of rolling less than 3 or exactly 6?','2/6','1/6','3/6','2/5','The favorable results are alternatives from one roll, so add.'),
+      A('A box contains 5 red, 4 blue, and 3 black pencils. What is red or blue?','5/12','4/12','9/12','5/11','One pencil has one color; add red and blue.'),
+      A('A wheel has 6 equal sections. What is the probability of landing on cat or fish?','2/6','1/6','3/6','2/5','One spin produces one label. The selected labels are added.'),
+      A('A number from 1 to 10 is chosen. What is the probability of 3 or 8?','1/10','1/10','2/10','1/8','The number is one result, so add the two alternatives.'),
+      A('A standard deck card is drawn. What is the probability of an ace or a jack?','4/52','4/52','8/52','4/48','A card cannot have both ranks, so add.'),
+      A('A bag has 2 white, 3 orange, and 4 purple balls. What is white or purple?','2/9','4/9','6/9','2/8','The one ball has one color, so add the two color cases.'),
+      A('A die is rolled. What is the probability of a 1 or an odd number greater than 3?','1/6','1/6','2/6','1/5','These are separate outcomes of one roll, so add.'),
+      A('A person chooses one drink. What is the probability of tea or milk?','1/4','1/4','2/4','1/3','Only one drink is chosen; add the alternatives.'),
+      A('A spinner has 10 equal sections, 3 red and 1 labeled 10. What is red or 10?','3/10','1/10','4/10','3/9','The spin lands in one section, so add.'),
+      A('A card is selected. What is the probability of a spade or a club?','13/52','13/52','26/52','13/39','A card has one suit, so add.'),
+      A('A digit from 0 to 9 is chosen. What is the probability of 0 or 9?','1/10','1/10','2/10','1/9','The digit is one result; add the two alternatives.'),
+      A('A bag has 6 numbered balls. What is the probability of an odd number or 2?','3/6','1/6','4/6','3/5','The cases are separate outcomes of one draw, so add.'),
+      A('A survey records one favorite sport. What is soccer or tennis?','5/30','7/30','12/30','5/29','Only one response is recorded, so add the alternatives.'),
+      A('A die is rolled. What is the probability of a number greater than 4 or exactly 1?','2/6','1/6','3/6','2/5','These are separate die outcomes, so add.'),
+      A('A card numbered 1 through 10 is selected. What is 7 or 10?','1/10','1/10','2/10','1/9','One card cannot have both numbers; add.'),
+      A('A bag contains 8 red and 2 yellow tokens. What is red or yellow?','8/10','2/10','10/10','8/9','Every token is one of these colors, so add.'),
+      A('A spinner has 5 equal sections. What is the probability of B or E?','1/5','1/5','2/5','1/4','A single spin gives one letter, so add.'),
+      A('One day of the week is selected. What is Saturday or Sunday?','1/7','1/7','2/7','1/6','The selected day is one day; add the two alternatives.'),
+      A('A number from 1 to 12 is chosen. What is 4 or 11?','1/12','1/12','2/12','1/11','The number is one outcome, so add.'),
+      A('A standard deck card is chosen. What is a red card or a black card?','26/52','26/52','52/52','26/51','Red and black are non-overlapping categories, so add.'),
+      A('A die is rolled. What is 2 or a number greater than 4?','1/6','2/6','3/6','1/5','The favorable outcomes are separate, so add.'),
+      A('A box has 8 letter tiles. What is the probability of M or T?','1/8','1/8','2/8','1/7','One tile is selected; add the two letters.'),
+      A('A spinner has 12 equal sections. What is section 3 or section 9?','1/12','1/12','2/12','1/11','The spin lands on one section, so add.'),
+      A('One subject card is drawn. What is Math or History?','1/6','1/6','2/6','1/5','Only one subject card is drawn; add.'),
+      A('A die is rolled. What is a 3 or a 4?','1/6','1/6','2/6','1/5','One roll cannot be both, so add.'),
+      A('A box has 6 stamped and 14 unstamped envelopes. What is stamped or unstamped?','6/20','14/20','20/20','6/19','The two categories cover separate outcomes, so add.'),
+      A('A raffle prize is a book, game, or puzzle. What is book or puzzle?','1/3','1/3','2/3','1/2','One prize is chosen, so add the two favorable prizes.'),
+      A('A number from 1 to 6 is selected. What is prime or 1?','3/6','1/6','4/6','3/5','The selected number is one result; add.'),
+      A('A direction card is drawn. What is North or East?','1/4','1/4','2/4','1/3','One direction card is drawn, so add.'),
+      A('A die is rolled. What is even or 1?','3/6','1/6','4/6','3/5','The outcomes are separate, so add.'),
+      A('A bowl has 4 lemon, 3 mint, and 5 berry candies. What is lemon or mint?','4/12','3/12','7/12','4/11','One candy has one flavor; add.'),
+      A('A spinner has 6 equal sections. What is B or F?','1/6','1/6','2/6','1/5','One spin gives one letter, so add.'),
+      A('A card numbered 1 through 10 is drawn. What is 1 or 10?','1/10','1/10','2/10','1/9','The two numbered outcomes are mutually exclusive, so add.'),
+      A('A die is rolled. What is less than 3 or greater than 5?','2/6','1/6','3/6','2/5','These are separate groups of outcomes, so add.'),
+      A('A jar has stars, circles, and squares. What is star or square?','3/10','4/10','7/10','3/9','One shape is selected, so add the two cases.'),
+      A('One preferred season is selected. What is winter or summer?','1/4','1/4','2/4','1/3','Only one season is selected; add.'),
+      A('A wheel has 5 equal sections. What is section 1 or 4?','1/5','1/5','2/5','1/4','A spin lands on one section, so add.'),
+      A('A standard deck card is drawn. What is a 2 or a 3?','4/52','4/52','8/52','4/48','A card cannot have both ranks; add.'),
+      A('A bowl has 2 red, 5 white, and 3 blue beads. What is white or blue?','5/10','3/10','8/10','5/9','One bead has one color, so add.'),
+    ];
+    const replacement=[
+      M('A bag has 3 red and 2 blue marbles. Draw a marble, replace it, then draw again. What is red twice?','3/5','3/5','2/4','3/4','Because the first marble is replaced, the bag returns to 3 red out of 5. Both draws use 3/5, then multiply.'),
+      M('A deck card is drawn, replaced, and drawn again. What is an ace twice?','4/52','4/52','3/51','4/51','Replacement restores the deck, so both ace probabilities stay 4/52. Multiply the two required draws.'),
+      M('A spinner has 4 equal colors and is spun twice. What is blue twice?','1/4','1/4','1/3','1/5','The spinner resets after each spin, so the two blue probabilities are both 1/4 and are multiplied.'),
+      M('A box has 6 green and 4 yellow balls. Draw with replacement twice. What is green twice?','6/10','6/10','5/9','6/9','Replacing the first ball keeps 6 green out of 10 for the second draw. Multiply 6/10 by 6/10.'),
+      M('A bag has 5 white and 5 black beads. Draw, replace, and draw again. What is white then black?','5/10','5/10','4/9','5/9','Replacement keeps the second draw at 5/10 black. Both required events are multiplied.'),
+      M('A number card from 1 to 8 is drawn, replaced, and drawn again. What is 3 twice?','1/8','1/8','1/7','2/8','The card is returned, so the second probability remains 1/8. Multiply.'),
+      M('A jar has 2 gold and 8 silver tokens. Draw with replacement twice. What is gold twice?','2/10','2/10','1/9','2/9','Replacement means the jar still has 2 gold out of 10 on draw two.'),
+      M('A coin is tossed twice. What is heads on both tosses?','1/2','1/2','1/1','1/3','The coin resets after the first toss. Both required head events are multiplied.'),
+      M('A bag has 4 orange and 6 purple balls. Draw, replace, and draw again. What is orange twice?','4/10','4/10','3/9','4/9','The first ball is replaced, so the second orange probability is still 4/10.'),
+      M('A card is drawn, replaced, and drawn again. What is a heart then a diamond?','13/52','13/52','12/51','13/51','Replacement restores all suits, so both fractions keep denominator 52.'),
+      M('A box has 7 red and 3 blue pens. Choose with replacement twice. What is blue twice?','3/10','3/10','2/9','3/9','The first pen returns, so both blue probabilities are 3/10.'),
+      M('A bag has 1 green and 9 yellow balls. Draw with replacement twice. What is green then yellow?','1/10','9/10','1/9','9/10','Replacement keeps the total at 10 on draw two. Multiply 1/10 by 9/10.'),
+      M('A spinner has 5 equal sections and is spun twice. What is section A twice?','1/5','1/5','1/4','2/5','Each spin has the same 1/5 chance because spins do not remove sections.'),
+      M('A raffle ticket from 12 is drawn, replaced, and drawn again. What is ticket 7 twice?','1/12','1/12','1/11','2/12','Replacement returns ticket 7 and keeps 12 tickets for the second draw.'),
+      M('A jar has 3 blue and 7 red beads. Draw with replacement twice. What is blue then red?','3/10','7/10','2/9','7/9','The jar returns to 10 beads after draw one, so the second fraction keeps denominator 10.'),
+      M('A die is rolled twice. What is a 4 on both rolls?','1/6','1/6','1/5','2/6','The die is not changed by a roll. Both 4 events are multiplied.'),
+      M('A bag has 8 white and 2 black marbles. Draw, replace, and draw again. What is black twice?','2/10','2/10','1/9','2/9','Replacement means the second draw still has 2 black out of 10.'),
+      M('A card numbered 1 through 6 is drawn, replaced, and drawn again. What is an even number twice?','3/6','3/6','2/5','3/5','The card is replaced, so the even probability remains 3/6 on both draws.'),
+      M('A basket has 5 apples and 5 oranges. Choose with replacement twice. What is apple then orange?','5/10','5/10','4/9','5/9','Replacement keeps 5 apples and 5 oranges for the second choice.'),
+      M('A bag has 6 red and 4 green counters. Draw with replacement twice. What is red then green?','6/10','4/10','5/9','4/9','The first counter is returned, so the second green probability remains 4/10.')
+    ];
+    const noReplacement=[
+      M('A bag has 3 red and 2 blue marbles. Draw twice without replacement. What is red twice?','3/5','2/4','3/5','2/5','After one red is removed, 2 red remain out of 4. The correct sequence is 3/5 × 2/4.'),
+      M('A deck card is drawn twice without replacement. What is an ace twice?','4/52','3/51','4/52','4/51','After an ace is removed, 3 aces remain and 51 cards remain. Use 4/52 × 3/51.'),
+      M('A box has 6 green and 4 yellow balls. Draw twice without replacement. What is green twice?','6/10','5/9','6/10','5/10','Removing a green leaves 5 green out of 9. Both required events are multiplied.'),
+      M('A jar has 5 white and 5 black beads. Draw white, then black, without replacement.','5/10','5/9','5/10','4/9','After a white is removed, 5 black remain out of 9. The second denominator changes to 9.'),
+      M('A bag has 4 orange and 6 purple balls. Draw orange twice without replacement.','4/10','3/9','4/10','3/10','Removing orange leaves 3 orange out of 9, not 4/10.'),
+      M('Two cards are drawn without replacement. What is a heart twice?','13/52','12/51','13/52','13/51','One heart is removed, leaving 12 hearts and 51 total cards.'),
+      M('A box has 7 red and 3 blue pens. Draw blue twice without replacement.','3/10','2/9','3/10','2/10','Removing a blue pen changes both the blue count and total count.'),
+      M('A bag has 1 green and 9 yellow balls. Draw green then yellow without replacement.','1/10','9/9','1/10','9/10','After the green is removed, all 9 remaining balls are yellow, so use 9/9.'),
+      M('A jar has 3 blue and 7 red beads. Draw blue then red without replacement.','3/10','7/9','3/10','7/10','After a blue is removed, 7 red remain out of 9.'),
+      M('A basket has 5 apples and 5 oranges. Draw apple then orange without replacement.','5/10','5/9','5/10','4/9','The first apple is not returned, so the total drops to 9 while 5 oranges remain.'),
+      M('A bag has 8 white and 2 black marbles. Draw black twice without replacement.','2/10','1/9','2/10','1/10','Removing one black leaves 1 black among 9 marbles.'),
+      M('A box has 2 red, 3 blue, and 5 yellow blocks. Draw red then yellow without replacement.','2/10','5/9','2/10','5/10','The first red is removed, so the second total is 9 while 5 yellow remain.'),
+      M('A bag has 4 red and 6 blue balls. Draw blue then red without replacement.','6/10','4/9','6/10','4/10','After a blue is removed, 4 red remain out of 9.'),
+      M('A deck card is drawn twice without replacement. What is red then black?','26/52','26/51','26/52','25/51','Removing a red leaves 26 black cards out of 51.'),
+      M('A bag has 5 yellow and 3 purple tokens. Draw yellow twice without replacement.','5/8','4/7','5/8','4/8','One yellow is removed, leaving 4 of 7.'),
+      M('A jar has 2 gold and 8 silver tokens. Draw gold then silver without replacement.','2/10','8/9','2/10','8/10','After gold is removed, 8 silver remain among 9 tokens.'),
+      M('A box has 9 green and 1 orange marble. Draw orange then green without replacement.','1/10','9/9','1/10','9/10','Removing the only orange leaves 9 green out of 9.'),
+      M('A bag has 6 red and 4 green counters. Draw red twice without replacement.','6/10','5/9','6/10','5/10','After one red is removed, 5 red remain out of 9.'),
+      M('A bowl has 3 lemon and 7 mint candies. Draw lemon then mint without replacement.','3/10','7/9','3/10','7/10','The first lemon is removed, so the second total is 9.'),
+      M('A raffle has 12 tickets, including 2 winning tickets. Draw two without replacement. What is winning twice?','2/12','1/11','2/12','2/11','After one winning ticket is removed, 1 winning ticket remains among 11.')
+    ];
+    const otherMultiply=[
+      M('A die is rolled and a coin is tossed. What is an even roll and heads?','3/6','1/2','2/6','1/3','Both the die condition AND the coin condition are required, so multiply.'),
+      M('A die is rolled twice. What is an odd number first and a 6 second?','3/6','1/6','2/6','1/5','The two ordered conditions must both happen, so multiply.'),
+      M('A spinner with 8 equal sections is spun twice. What is section 3 then section 7?','1/8','1/8','2/8','1/7','Both specified spins are required, so multiply.'),
+      M('A coin is tossed three times. What is heads, tails, then heads?','1/2','1/2','2/2','1/3','All three outcomes in the sequence are required, so multiply.'),
+      M('A die is rolled and a card is drawn. What is a 1 and a queen?','1/6','4/52','1/5','3/52','Both independent events must occur, so multiply.'),
+      M('A spinner with 6 equal sections is spun three times. What is section 6 every time?','1/6','1/6','1/5','2/6','The same result is required on all three spins, so multiply.'),
+      M('Two students are selected in order without replacement. What is two named students first and second?','1/20','1/19','1/20','1/18','The first selection AND second selection are both required, so multiply conditional probabilities.'),
+      M('A die is rolled four times. What is a 4 every time?','1/6','1/6','1/5','2/6','Four required die outcomes are multiplied.'),
+      M('A coin is tossed and a card is drawn. What is tails and an ace?','1/2','4/52','1/3','3/52','Both events must occur, so multiply.'),
+      M('A number card from 1 to 5 is drawn twice with replacement. What is 1 then 5?','1/5','1/5','1/4','2/5','Both draws are required, and replacement keeps each probability at 1/5.')
+    ];
+    const questions=[...addQuestions,...replacement,...noReplacement,...otherMultiply].map((q,index)=>({...q,id:index}));
+    let order=[],position=0,score=0,answered=false,slots=[null,null,null],selected=null,drag=null,tokens=[];
+    const $=id=>document.getElementById(id);
+    const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+    function tokenList(q){return shuffle([{id:'a',text:q.a,kind:'fraction'},{id:'b',text:q.b,kind:'fraction'},{id:'d1',text:q.d[0],kind:'fraction'},{id:'d2',text:q.d[1],kind:'fraction'},{id:'op-plus',text:'+',kind:'operator'},{id:'op-multiply',text:'×',kind:'operator'}]);}
+    function start(){order=shuffle(questions.map((_,i)=>i));position=0;score=0;$('finish').classList.remove('show');$('quiz').style.display='block';render();}
+    function render(){const q=questions[order[position]];slots=[null,null,null];selected=null;answered=false;tokens=tokenList(q);$('counter').textContent=`Question ${position+1} of ${questions.length}`;$('question').textContent=q.story;$('score').textContent=`${score} / ${position}`;$('bar').style.width=`${position/questions.length*100}%`;$('feedback').className='feedback';$('next').classList.remove('show');renderBank();renderSlots();}
+    function moveGhost(x,y,tilt=0){if(!drag?.ghost)return;drag.ghost.style.transform=`translate(${x+12}px,${y+12}px) rotate(${tilt}deg)`;}
+    function startDrag(id,button,event){
+      if(answered||!event.isPrimary)return;
+      const rect=button.getBoundingClientRect();const ghost=button.cloneNode(true);ghost.className=`drag-ghost ${button.dataset.kind==='operator'?'operator':''}`;ghost.style.width=`${rect.width}px`;ghost.style.height=`${rect.height}px`;ghost.removeAttribute('data-id');document.body.appendChild(ghost);
+      drag={id,ghost,lastX:event.clientX,lastY:event.clientY};button.classList.add('dragging');moveGhost(event.clientX,event.clientY);
+    }
+    function settleGhost(ghost,slot){
+      const rect=slot.getBoundingClientRect();const x=rect.left+rect.width/2-ghost.offsetWidth/2;const y=rect.top+rect.height/2-ghost.offsetHeight/2;
+      ghost.style.transition='transform 120ms cubic-bezier(.2,.8,.2,1)';ghost.style.transform=`translate(${x}px,${y}px) rotate(1.5deg)`;
+      setTimeout(()=>ghost.style.transform=`translate(${x}px,${y}px) rotate(-.8deg)`,120);
+      setTimeout(()=>ghost.style.transform=`translate(${x}px,${y}px) rotate(0deg)`,180);
+      setTimeout(()=>ghost.remove(),250);
+    }
+    function clearDragState(keepGhost=false){const ghost=drag?.ghost;drag=null;document.querySelectorAll('.token').forEach(x=>x.classList.remove('dragging'));document.querySelectorAll('.slot').forEach(x=>x.classList.remove('hot'));if(ghost&&!keepGhost)ghost.remove();}
+    function renderBank(){
+      const bank=$('bank');bank.innerHTML='';const used=new Set(slots.filter(Boolean).map(t=>t.id));
+      tokens.filter(t=>!used.has(t.id)).forEach(t=>{
+        const b=document.createElement('button');b.className=`token ${t.kind==='operator'?'operator':''}`;b.textContent=t.text;b.dataset.id=t.id;b.dataset.text=t.text;b.dataset.kind=t.kind;b.draggable=false;
+        b.addEventListener('click',()=>{if(answered)return;selected=t.id;document.querySelectorAll('.token').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');});
+        b.addEventListener('pointerdown',e=>startDrag(t.id,b,e));
+        bank.appendChild(b);
+      });
+    }
+    function returnCard(i){if(answered||!slots[i])return;slots[i]=null;selected=null;renderBank();renderSlots();}
+    function renderSlots(){document.querySelectorAll('.slot').forEach((slot,i)=>{slot.innerHTML='';const t=slots[i];if(!t){slot.textContent=i===1?'operation':'fraction';slot.classList.remove('filled');return;}slot.classList.add('filled');slot.textContent=t.text;const remove=document.createElement('button');remove.className='remove';remove.textContent='×';remove.setAttribute('aria-label','Return card');remove.onclick=e=>{e.stopPropagation();returnCard(i);};slot.appendChild(remove);});}
+    function canPlace(id,i){const source=tokens.find(t=>t.id===id);return Boolean(source&&((i===1&&source.kind==='operator')||(i!==1&&source.kind==='fraction')));}
+    function place(id,i,keepGhost=false){if(answered||!canPlace(id,i))return false;const from=slots.findIndex(t=>t?.id===id);if(from>=0)slots[from]=null;const source=tokens.find(t=>t.id===id);slots[i]={...source};selected=null;renderBank();renderSlots();clearDragState(keepGhost);return true;}
+    function answerValue(){return slots.map(t=>t?.text||null);}
+    function check(unknown=false){if(answered)return;const q=questions[order[position]];if(!unknown&&slots.some(x=>!x)){showMessage('Complete the formula first','Put two fraction cards and one operation card into the three slots.','Choose the two probabilities and then decide whether the events are added or multiplied.','incorrect');return;}answered=true;const vals=answerValue();const frac=vals.filter((_,i)=>i!==1);const correctFracs=[q.a,q.b].sort();const isCorrect=!unknown&&vals[1]===q.op&&JSON.stringify([...frac].sort())===JSON.stringify(correctFracs);if(isCorrect)score++;$('score').textContent=`${score} / ${position+1}`;$('bar').style.width=`${(position+1)/questions.length*100}%`;showMessage(isCorrect?'Correct!':unknown?'Here is the correct formula:':'Not quite',`Correct formula: ${q.a} ${q.op} ${q.b}`,q.explanation,isCorrect?'correct':'incorrect');document.querySelectorAll('.token').forEach(x=>x.disabled=true);$('next').classList.add('show');}
+    function showMessage(title,rule,text,kind){$('feedbackTitle').textContent=title;$('feedbackRule').textContent=rule;$('feedbackText').textContent=text;$('feedback').className=`feedback show ${kind}`;}
+    function next(){if(position<questions.length-1){position++;render();}else{$('quiz').style.display='none';$('finish').classList.add('show');$('finalText').textContent=`You built ${score} out of ${questions.length} formulas correctly.`;}}
+    document.querySelectorAll('.slot').forEach((slot,i)=>{
+      slot.addEventListener('click',()=>{if(selected)place(selected,i);else returnCard(i);});
+    });
+    window.addEventListener('pointerup',e=>{if(!drag)return;const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('.slot');const {id,ghost}=drag;if(el&&canPlace(id,Number(el.dataset.slot))){settleGhost(ghost,el);place(id,Number(el.dataset.slot),true);}else clearDragState();},true);
+    window.addEventListener('pointercancel',clearDragState,true);
+    document.addEventListener('pointermove',e=>{if(drag){const tilt=Math.max(-2,Math.min(2,(e.clientX-drag.lastX)*.18));moveGhost(e.clientX,e.clientY,tilt);drag.lastX=e.clientX;drag.lastY=e.clientY;const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('.slot');document.querySelectorAll('.slot').forEach((s,i)=>s.classList.toggle('hot',s===el&&canPlace(drag.id,i)));}});
+    $('check').onclick=()=>check(false);$('unknown').onclick=()=>check(true);$('clear').onclick=()=>{if(!answered){slots=[null,null,null];selected=null;renderBank();renderSlots();}};$('next').onclick=next;$('restart').onclick=start;start();
+  </script>
+</body>
+</html>
